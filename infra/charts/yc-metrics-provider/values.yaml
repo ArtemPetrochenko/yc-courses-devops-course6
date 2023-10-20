@@ -1,0 +1,30 @@
+allowAnonymousUser: true
+image:
+  pullPolicy: Always
+  repository: cr.yandex/yc-marketplace/yandex-cloud/metric-provider/metric-provider
+  tag: 0.1.7
+imagePullSecrets: null
+loggingDebug: true
+nameOverride: null
+podSecurityContext: null
+securityContext: null
+serviceAccount:
+  automountServiceAccountToken: null
+  create: true
+  name: null
+yandexMetrics:
+  downsampling:
+    disabled: true
+    gapFilling: "NULL"
+    gridAggregation: MAX
+    gridInterval: 10
+    maxPoints: 10
+  folderId: null
+  token:
+    serviceAccountJson: ""
+    url: https://iam.api.cloud.yandex.net/iam/v1/tokens
+  url: https://monitoring.api.cloud.yandex.net/monitoring/v2/data/read/
+  window: 2m
+service:
+  enabled: true
+  serviceType: ClusterIP

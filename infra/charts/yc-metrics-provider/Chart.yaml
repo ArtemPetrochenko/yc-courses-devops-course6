@@ -1,0 +1,16 @@
+apiVersion: v2
+appVersion: 0.1.7
+description: Yandex.Cloud Application Yandex Metric Provider Helm chart for Kubernetes
+keywords:
+- yc
+- yandexcloud
+- yandex
+- metrics
+- yandex metrics
+- provider
+kubeVersion: '>= 1.18.0'
+maintainers:
+- name: Edgar Zhivaev
+name: yc-metrics-provider
+type: application
+version: 0.1.10

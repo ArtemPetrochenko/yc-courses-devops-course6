@@ -1,0 +1,64 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "metric-provider.fullname" . }}
+rules:
+  - apiGroups:
+      - "external.metrics.k8s.io"
+    resources:
+      - "*"
+    verbs:
+      - "list"
+      - "watch"
+      - "get"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "metric-provider.fullname" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "metric-provider.fullname" . }}
+subjects:
+  {{- if .Values.allowAnonymousUser}}
+  - kind: User
+    name: system:anonymous
+    namespace: {{ .Release.Namespace }}
+  {{- end}}
+  - kind: ServiceAccount
+    name: {{ include "metric-provider.serviceAccountName" .}}
+    namespace: {{ .Release.Namespace }}
+  - kind: ServiceAccount
+    name: horizontal-pod-autoscaler
+    namespace: kube-system
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Release.Namespace }}:system:auth-delegator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "metric-provider.serviceAccountName" .}}
+    namespace: {{ .Release.Namespace }}
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: external-metrics-resource-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "metric-provider.serviceAccountName" .}}
+    namespace: {{ .Release.Namespace }}
