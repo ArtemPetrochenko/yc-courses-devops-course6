@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ include "metric-provider.fullname" . }}
+  name: {{ include "metric-provider.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "metric-provider.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "metric-provider.fullname" . }}
+      name: {{ include "metric-provider.fullname" . }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "metric-provider.serviceAccountName" .}}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - /metric_provider
+            - --secure-port=443
+            - --logtostderr=true
+            - --authentication-skip-lookup=true
+            - --authorization-always-allow-paths=*
+            - --v=10
+          ports:
+            - containerPort: 443
+              name: https
+          env:
+            - name: LOGGING_DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  key: loggingDebug
+                  name: {{ include "metric-provider.fullname" . }}
+            - name: YM_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: ymUrl
+                  name: {{ include "metric-provider.fullname" . }}
+            - name: YM_FOLDER_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: ymFolderId
+                  name: {{ include "metric-provider.fullname" . }}
+            - name: YM_WINDOW
+              valueFrom:
+                configMapKeyRef:
+                  key: ymWindow
+                  name: {{ include "metric-provider.fullname" . }}
+            - name: YM_DS_GRIDAGGREGATION
+              valueFrom:
+                configMapKeyRef:
+                  key: ymDsGridAggregation
+                  name: {{ include "metric-provider.fullname" . }}
+            - name: YM_DS_GAPFILLING
+              valueFrom:
+                configMapKeyRef:
+                  key: ymDsGapFilling
+                  name: {{ include "metric-provider.fullname" . }}
+            - name: YM_DS_MAXPOINTS
+              valueFrom:
+                configMapKeyRef:
+                  key: ymDsMaxPoints
+                  name: {{ include "metric-provider.fullname" . }}
+            - name: YM_DS_GRIDINTERVAL
+              valueFrom:
+                configMapKeyRef:
+                  key: ymDsGridInterval
+                  name: {{ include "metric-provider.fullname" . }}
+            - name: YM_DS_DISABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: ymDsDisabled
+                  name: {{ include "metric-provider.fullname" . }}
+            - name: YM_TOKEN_URL
+              valueFrom:
+                secretKeyRef:
+                  key: ymTokenUrl
+                  name: {{ include "metric-provider.fullname" . }}
+            - name: YM_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: ymTokenServiceaccountJson
+                  name: {{ include "metric-provider.fullname" . }}

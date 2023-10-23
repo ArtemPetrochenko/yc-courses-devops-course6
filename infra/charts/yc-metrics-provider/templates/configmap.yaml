@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "metric-provider.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+data:
+  loggingDebug: {{ .Values.loggingDebug | quote }}
+  ymUrl: {{ .Values.yandexMetrics.url | quote }}
+  ymFolderId: {{ .Values.yandexMetrics.folderId | quote }}
+  ymWindow: {{ .Values.yandexMetrics.window | quote }}
+  ymDsGridAggregation: {{ .Values.yandexMetrics.downsampling.gridAggregation | default "" | quote }}
+  ymDsGapFilling: {{ .Values.yandexMetrics.downsampling.gapFilling | default "" | quote }}
+  ymDsMaxPoints: {{ .Values.yandexMetrics.downsampling.maxPoints | default "" | quote }}
+  ymDsGridInterval: {{ .Values.yandexMetrics.downsampling.gridInterval | default "" | quote }}
+  ymDsDisabled: {{ .Values.yandexMetrics.downsampling.disabled | quote }}

@@ -1,0 +1,9 @@
+spec:
+  source:
+    repoURL:
+    targetRevision:
+    appsRepoURL:
+    appsTargetRevision:
+  destination:
+    server:
+    name:
