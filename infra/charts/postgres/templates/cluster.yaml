@@ -6,9 +6,9 @@ spec:
   forProvider:
     name: {{ include "postgresFullName" . }}
     folderIdRef:
-      name: default
+      name: {{ .Values.folder }}
     networkIdRef:
-      name: default
+      name: {{ .Values.network }}
     {{- if .Values.securityGroupNames }}
     securityGroupIdsRefs:
     {{- range .Values.securityGroupNames }}

@@ -20,11 +20,11 @@ spec:
     nodeServiceAccountIdRef:
       name: {{ include "clusterFullName" . }}
     networkIdRef:
-      name: default
+      name: {{ .Values.network }}
     serviceAccountIdRef:
       name: {{ include "clusterFullName" . }}
     folderIdRef:
-      name: default
+      name: {{ .Values.folder }}
     releaseChannel: {{ .Values.releaseChannel }}
     clusterIpv4Range: {{ .Values.clusterIpv4Range }}
     serviceIpv4Range: {{ .Values.serviceIpv4Range }}

@@ -1,3 +1,5 @@
+folder: default
+network: default
 postgresName:
 postgresZones:
   - "ru-central1-b"

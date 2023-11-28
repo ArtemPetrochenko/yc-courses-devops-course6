@@ -1,3 +1,5 @@
+folder: "default"
+network: "default"
 clusterName: "prod"
 clusterVersion: "1.24"
 masterType: regional
