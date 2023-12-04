@@ -6,7 +6,7 @@ spec:
   forProvider:
     name: prod
     folderIdRef:
-      name: default
+      name: {{ .Values.folder }}
     networkIdRef:
       name: default
     ingress:
